@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<link rel="stylesheet" href="css/style.css">
+	<title>Document</title>
+</head>
+<body>
+	<div id="time">剩余时间：60.00秒</div>
+	<div id="score">分数：0</div>
+	<button id="btn">开始</button>
+	<div id="wrap"><img src="img/2.png" alt="">
+	</div>
+</body>
+<script type="text/javascript">
+	var time = document.querySelector("#time");
+	var score = document.querySelector('#score');
+	var btn = document.querySelector('#btn');
+	var wrap = document.querySelector("#wrap");
+	var start_bol = false;//记录开始 false没开始 true开始了
+	var index = 1;//记录第几关
+	var scores = 0;
+	var aColor = ["red","yellow","blue","green","pink",'orange'];
+	var color_s = 0;
+	btn.onclick = function () {
+		if (start_bol) {return};//判断如果开始了就不再重复开始
+		start_bol = true;//记录开始了
+		index = 1;
+		index++;
+		timeFn()//倒计时开始
+		create(index*index);//创建图片
+	}
+	//倒计时函数
+	function timeFn() {
+		var n = 60;
+		var timer = setInterval(function () {
+			n -= 0.02;
+			if (n<=0) {
+				clearInterval(timer);
+				n=0;
+				start_bol = false;
+			}
+			time.innerHTML = "剩余时间："+n.toFixed(2)+"秒"
+		},20)
+	}
+	
+	//创建图片
+	function create(len) {		
+		wrap.innerHTML = '';
+		for (var i = 0; i < len; i++) {
+			var img = document.createElement('img');
+			img.style.width = (wrap.offsetWidth-(index+1)*5)/index + "px";//计算每张图片大小
+			img.style.marginLeft = "5px";
+			img.style.marginTop = "5px";
+			img.style.background = aColor[color_s];
+			img.src = "img/1.png";
+			wrap.appendChild(img);			
+		}
+		color_s++;//每次图片的背景颜色换一个
+		if (color_s>=aColor.length) {//如果到了最后一个颜色变回0
+			color_s=0;
+		}
+		change()
+	}
+
+	//随机改变一张图片为房祖名
+	function change() {
+		var rnd = Math.floor(Math.random()*wrap.children.length);
+		wrap.children[rnd].src = 'img/2.png';
+		//给房祖名图片加上点击事件
+		wrap.children[rnd].onclick = function () {
+			if (!start_bol) {return}//如果游戏结束了就不再执行
+			index++;
+			if (index>7) {//如果游戏超过了7关就不再增加数量
+				index = 7;
+			}
+			create(index*index);
+			scores += 10;//点击一次加10分
+			score.innerHTML = "分数："+scores;
+		}
+	}
+	// http://www.webhek.com/color-test
+	// http://www.webhek.com/color-test
+
+</script>
+</html>
+
+
+
